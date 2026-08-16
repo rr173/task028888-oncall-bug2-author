@@ -3,6 +3,7 @@ package oncall
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -30,6 +31,11 @@ func Build(req Request) (*Schedule, error) {
 	}
 
 	n := len(req.Roster)
+	for i, eng := range req.Roster {
+		if strings.TrimSpace(eng) == "" {
+			return nil, fmt.Errorf("roster engineer at index %d is empty", i)
+		}
+	}
 	if n > 0 && (req.StartIndex < 0 || req.StartIndex >= n) {
 		return nil, fmt.Errorf("start index %d out of range [0,%d)", req.StartIndex, n)
 	}
